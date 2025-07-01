@@ -19,11 +19,10 @@ try:
     # df_base_roubo_carga.columns = [col.strip().replace('\ufeff', '') for col in df_base_roubo_carga.columns]
         
     df_novo = pd.merge(df_basedp, df_base_roubo_carga, on='cod_ocorrencia')
+    df_roubo = df_novo[['ano', 'munic', 'roubo_carga']]
     
-    filtro_data = df_novo['ano']
-    
-    df_novo2 = df_novo.groupby(['ano', 'munic']).sum(['roubo_carga']).reset_index()
-    print(df_novo2)
+    df_ocorrencia_roubo = df_roubo.groupby(['ano', 'munic']).sum(['roubo_carga']).reset_index()
+    print(df_ocorrencia_roubo)
 
     df_novo_filtro_data = filtro_data[df_novo['ano'].isin([2022, 2023])]
 
@@ -65,3 +64,5 @@ try:
 
 except Exception as a:
     print(f'Erro: {a}')
+
+df_novo_filtro_data = filtro_data[df_novo['ano'].isin([2022, 2023])]
