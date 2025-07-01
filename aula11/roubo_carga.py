@@ -1,4 +1,7 @@
-from sqlalchemy import create_engine, text
+from sqlalchemy import create_engine
+import pandas as pd
+import numpy as np 
+
 
 host = 'localhost'
 user = 'root'
@@ -6,19 +9,17 @@ password = ''
 database = 'bd_aula11'
 
 
-def conecta_banco():
-    try:
-        engine = create_engine(f'mysql+pymysql://{user}:{password}@{host}/{database}')
+try:
+    engine = create_engine(f'mysql+pymysql://{user}:{password}@{host}/{database}')
 
-        with engine.connect() as conexao:
-            query = 'SELECT * FROM basedp, basedp_roubo_carga'
+    df_basedp = pd.read_sql('basedp', engine)
+    df_base_roubo_carga = pd.read_sql('basedp_roubo_carga', engine)
 
-            resultado = conexao.execute(text(query))
-
-            if resultado.rowcount > 0:
-                for item in resultado:
-                    # print(item)
-                    print(item[0], item[1], item[2])
-
-    except Exception as e:
-        print(f'Erro: {e}')
+    # df_basedp.columns = [col.strip().replace('\ufeff', '') for col in df_basedp.columns]
+    # df_base_roubo_carga.columns = [col.strip().replace('\ufeff', '') for col in df_base_roubo_carga.columns]
+        
+    df_novo = pd.merge(df_basedp, df_base_roubo_carga, on='cod_ocorrencia')
+    
+    print(df_novo.head())
+except Exception as e:
+    print(f'Erro: {e}')
