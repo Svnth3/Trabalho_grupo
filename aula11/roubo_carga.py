@@ -11,20 +11,16 @@ database = 'bd_aula11'
 
 try:
     engine = create_engine(f'mysql+pymysql://{user}:{password}@{host}/{database}')
-
-    df_basedp = pd.read_sql('basedp', engine)
-    df_base_roubo_carga = pd.read_sql('basedp_roubo_carga', engine)
-
-    # df_basedp.columns = [col.strip().replace('\ufeff', '') for col in df_basedp.columns]
-    # df_base_roubo_carga.columns = [col.strip().replace('\ufeff', '') for col in df_base_roubo_carga.columns]
-        
-    df_novo = pd.merge(df_basedp, df_base_roubo_carga, on='cod_ocorrencia')
-    df_roubo = df_novo[['ano', 'munic', 'roubo_carga']]
     
-    df_ocorrencia_roubo = df_roubo.groupby(['ano', 'munic']).sum(['roubo_carga']).reset_index()
+    query = 'SELECT b.ano, b.munic, b.cod_ocorrencia, r.roubo_carga FROM basedp b JOIN basedp_roubo_carga r ON b.cod_ocorrencia = r.cod_ocorrencia WHERE b.ano IN (2022, 2023)'
+
+    df_roubo = pd.read_sql(query, engine)
+
+    df_ocorrencia_roubo = df_roubo.groupby('munic')['roubo_carga'].sum().reset_index()
+
+   
     print(df_ocorrencia_roubo)
 
-    df_novo_filtro_data = filtro_data[df_novo['ano'].isin([2022, 2023])]
 
 except Exception as e:
     print(f'Erro: {e}')
@@ -32,7 +28,7 @@ except Exception as e:
 try:
     print("Obtendo informações do roubo de carga.")
     
-    array_roubo_carga = np.array(df_novo['roubo_carga'])
+    array_roubo_carga = np.array(df_roubo['roubo_carga'])
 
     # print(filtro_data)
 
@@ -60,9 +56,14 @@ try:
     # print('Minimo:', minimo)
     # print('Amplitude:', amplitude_total)
 
-    df_base_roubo_carga_menores = df_base_roubo_carga[df_base_roubo_carga] <M
+    # df_base_roubo_carga_menores = df_base_roubo_carga[[df_base_roubo_carga] < q1]
+    # df_base_roubo_carga_maiores = df_base_roubo_carga[[df_base_roubo_carga] < q3]
 
+    variancia = np.var(array_roubo_carga)
+    distancia_variancia_media = variancia / (media_roubo_carga **2)
+    desvio_padrao = np.std(array_roubo_carga)
+    coeficiente_variação = desvio_padrao / media_roubo_carga
+    
 except Exception as a:
     print(f'Erro: {a}')
 
-df_novo_filtro_data = filtro_data[df_novo['ano'].isin([2022, 2023])]
