@@ -15,7 +15,7 @@ import matplotlib.pyplot as plt
 host = 'localhost'
 user = 'root'
 password = ''
-database = 'db_roubo'
+database = 'db_roubos'
 
 
 try:
@@ -159,6 +159,8 @@ try:
     plt.text(0.5, 0.5, f'Distancia da média e Variância: {distancia_var_media:.2f}', fontsize=9)
     plt.text(0.5, 0.4, f'Coeficiente de Variação: {coef_variacao:.2f}', fontsize=10)
     plt.text(0.5, 0.3, f'Desvio Padrão: {desvio_padrao:.3f}', fontsize=10)
+    plt.text(0.5, 0.2, f'Assimetria: {assimetria:.3f}', fontsize=10)
+    plt.text(0.5, 0.1, f'Curtose: {curtose:.3f}', fontsize=10)
 
     plt.xticks([])
     plt.yticks([])
