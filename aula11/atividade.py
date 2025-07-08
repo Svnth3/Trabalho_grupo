@@ -14,7 +14,7 @@ import matplotlib.pyplot as plt
 
 host = 'localhost'
 user = 'root'
-password = 'Pauloediego1'
+password = ''
 database = 'db_roubo'
 
 
